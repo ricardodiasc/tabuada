@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Tabuada from './Tabuada';
+import Tabuada from './components/Tabuada';
 import logo from './logo.svg';
 import './App.css';
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
@@ -46,19 +45,25 @@ class Tabuada extends React.Component {
         });
     }
 
+    
     responder() {
         const gabarito = this.state.n1 * this.state.n2;
         console.log(`Resposta ${this.state.resposta} - Gabarito ${gabarito} `);
         if(this.state.resposta === gabarito) {
-            alert('Correto');
+            window.alert('Correto');
+            //document.getElementById('respostaInput').focus();
+            //this.respostaInput.focus();
+        
         } else {
-            alert('Errou.');
+            window.alert('Errou.');
+            //document.getElementById('respostaInput').focus();
+            //this.respostaInput.focus();
         }
         
         this.setState({
-            resposta:''
+            resposta:'0'
         });
-        this.respostaInput.focus();
+
     }
 
     respostaHandle(e) {
@@ -77,7 +82,7 @@ class Tabuada extends React.Component {
                     <Grid item xs={12}>
                         <Paper >
                             <FormLabel>{this.state.n1}</FormLabel>    
-                            <div>X</div>
+                            X
                             <FormLabel>{this.state.n2}</FormLabel>
                         </Paper>
                     </Grid>
@@ -88,13 +93,8 @@ class Tabuada extends React.Component {
                 
                 
                 
-                <div className="container multiplicacao">
-                    <label className="">{this.state.n1}</label>
-                    X
-                    <label>{this.state.n2}</label>
-                </div>
                 <div className="container">
-                    <input focus="true" className="item-resposta" type="number" value={this.state.resposta} onChange={this.respostaHandle.bind(this)} />
+                    <input id="respostaInput" focus="true" className="item-resposta" type="number" value={this.state.resposta} onChange={this.respostaHandle.bind(this)} />
                 </div>
                 <div className="container">
                     <Button color="primary" variant="contained" onClick={this.responder.bind(this)}>Responder</Button>
