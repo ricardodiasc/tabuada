@@ -1,10 +1,12 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import Input from '@material-ui/core/Input';
 
+import GameLogic from '../logic/GameLogic';
+import GameOver from './GameOver';
 
 
 const styles = theme => ({
@@ -17,20 +19,24 @@ const styles = theme => ({
     },
     control: {
         padding: theme.spacing.unit * 2
+    },
+    chalenge: {
+        height: 120
     }
-})
+});
 
 
 class Tabuada extends React.Component {
     constructor(props) {
         super(props);
-        this.respostaInput = null;
+        this.gameLogic = new GameLogic();
         
         this.state = {
-            n1:0,
-            n2:0,
-            resposta:0,
-            acertos:0
+            n1:this.gameLogic.n1,
+            n2:this.gameLogic.n2,
+            result:this.gameLogic.result,
+            score:this.gameLogic.score,
+            record: this.gameLogic.record
         }
     }
 
@@ -38,73 +44,84 @@ class Tabuada extends React.Component {
         return Math.floor(Math.random() * Math.floor(max));
     }
 
-    novoJogo() {
+    newGame() {
+        this.gameLogic.startGame();
         this.setState({
-            n1:this._getRandom(10),
-            n2:this._getRandom(10)
-        });
+            n1:this.gameLogic.n1,
+            n2:this.gameLogic.n2
+        },()=>document.getElementById("respostaInput").focus());
     }
 
     
-    responder() {
-        const gabarito = this.state.n1 * this.state.n2;
-        console.log(`Resposta ${this.state.resposta} - Gabarito ${gabarito} `);
-        if(this.state.resposta === gabarito) {
-            window.alert('Correto');
-            //document.getElementById('respostaInput').focus();
-            //this.respostaInput.focus();
-        
-        } else {
-            window.alert('Errou.');
-            //document.getElementById('respostaInput').focus();
-            //this.respostaInput.focus();
+    answer() {
+        if (this.gameLogic.testResult(this.state.result)) {
+            this.setState({
+                score: this.gameLogic.score,
+                n1: this.gameLogic.n1,
+                n2:this.gameLogic.n2,
+                record: this.gameLogic.record
+            },()=> document.getElementById("respostaInput").focus());
+            
         }
-        
+
         this.setState({
-            resposta:'0'
+            result:''
         });
 
     }
 
+    renderMainMenu() {
+        return (
+            <Grid container spacing={16} alignItems="center" justify="center">
+                <Button color="secondary" variant="contained" onClick={this.newGame.bind(this)}>Iniciar novo jogo</Button>
+            </Grid>
+        );
+    }
+
     respostaHandle(e) {
-        if(this.respostaInput == null)
-            this.respostaInput = e.target;
-        
         this.setState({
-            resposta: parseInt(e.target.value,10)
+            result: parseInt(e.target.value,10)
         });
+    }
+
+    renderGame() {
+        return (
+            <Grid container spacing={16} alignItems="center" justify="center">
+                <Grid item xs={6} sm={10}>
+                        <Paper>
+                            <span style={{fontSize:23, padding: 10}}>{this.state.n1}</span>
+                                
+                            X
+                
+                            <span style={{fontSize:23, padding: 10}}>{this.state.n2}</span>
+                        </Paper>
+                </Grid>
+                <Grid container alignItems="center" justify="center">
+                    <Input 
+                        id="respostaInput" 
+                        type="number" 
+                        style={{width:'50px'}}
+                        value={this.state.result} 
+                        onChange={this.respostaHandle.bind(this)}/>
+                </Grid>
+                <Grid>
+                    <Button color="primary" variant="contained" onClick={this.answer.bind(this)}>Responder</Button>
+                </Grid>
+            </Grid>
+        );
     }
 
     render() {
         return (
             <div >
-                <Grid container className={styles.root} spacing={16}>
-                    <Grid item xs={12}>
-                        <Paper >
-                            <FormLabel>{this.state.n1}</FormLabel>    
-                            X
-                            <FormLabel>{this.state.n2}</FormLabel>
-                        </Paper>
-                    </Grid>
-                </Grid>
-                <Grid container className={styles.root}>
+                
+                {this.gameLogic.gameOver && <GameOver score={this.gameLogic.score} record={this.gameLogic.record} />}
+                {this.gameLogic.gameInProgress && (!this.gameLogic.gameOver) && this.renderGame()}
 
-                 </Grid>
+                {(!this.gameLogic.gameInProgress) && this.renderMainMenu()}
                 
                 
-                
-                <div className="container">
-                    <input id="respostaInput" focus="true" className="item-resposta" type="number" value={this.state.resposta} onChange={this.respostaHandle.bind(this)} />
-                </div>
-                <div className="container">
-                    <Button color="primary" variant="contained" onClick={this.responder.bind(this)}>Responder</Button>
-                </div>
 
-                <div className="container">
-                    <Button color="secondary" variant="contained" onClick={this.novoJogo.bind(this)}>Iniciar novo jogo</Button>
-                    <Button color="default" variant="contained">Configurações</Button>
-                </div>
-                
             </div>
 
         );
