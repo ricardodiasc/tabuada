@@ -1,133 +1,112 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Input from '@material-ui/core/Input';
+import React, { useState, useRef } from "react";
+import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Input from "@material-ui/core/Input";
 
-import GameLogic from '../logic/GameLogic';
-import GameOver from './GameOver';
-
+import GameLogic from "../logic/GameLogic";
+import GameOver from "./GameOver";
 
 const styles = theme => ({
-    root: {
-        flexGrow: 1
-    },
-    paper: {
-        width: 100,
-        height: 140
-    },
-    control: {
-        padding: theme.spacing.unit * 2
-    },
-    chalenge: {
-        height: 120
-    }
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    width: 100,
+    height: 140
+  },
+  control: {
+    padding: theme.spacing.unit * 2
+  },
+  chalenge: {
+    height: 120
+  }
 });
 
+const gameLogic = new GameLogic();
 
-class Tabuada extends React.Component {
-    constructor(props) {
-        super(props);
-        this.gameLogic = new GameLogic();
-        
-        this.state = {
-            n1:this.gameLogic.n1,
-            n2:this.gameLogic.n2,
-            result:this.gameLogic.result,
-            score:this.gameLogic.score,
-            record: this.gameLogic.record
-        }
+const Tabuada = () => {
+  const [n1, setN1] = useState(gameLogic.n1);
+  const [n2, setN2] = useState(gameLogic.n2);
+  const [result, setResult] = useState(gameLogic.result);
+
+  const respostaRef = useRef(null);
+
+  const newGame = () => {
+    gameLogic.startGame();
+
+    setN1(gameLogic.n1);
+    setN2(gameLogic.n2);
+  };
+
+  const answer = () => {
+    if (result !== "" && gameLogic.testResult(result)) {
+      //TODO: Change to useTabuadaGameLogic com objeto
+      setN1(gameLogic.n1);
+      setN2(gameLogic.n2);
+
+      respostaRef.current.focus();
     }
 
-    _getRandom(max) {
-        return Math.floor(Math.random() * Math.floor(max));
+    setResult("");
+  };
+
+  const renderMainMenu = () => {
+    return (
+      <Grid container spacing={16} alignItems="center" justify="center">
+        <Button color="secondary" variant="contained" onClick={newGame}>
+          Iniciar novo jogo
+        </Button>
+      </Grid>
+    );
+  };
+
+  const respostaHandle = e => {
+    if (e.target.value !== "") {
+      setResult(parseInt(e.target.value, 10));
     }
+  };
 
-    newGame() {
-        this.gameLogic.startGame();
-        this.setState({
-            n1:this.gameLogic.n1,
-            n2:this.gameLogic.n2
-        },()=>document.getElementById("respostaInput").focus());
-    }
+  const renderGame = () => {
+    return (
+      <Grid container spacing={16} alignItems="center" justify="center">
+        <Grid item xs={6} sm={10}>
+          <Paper>
+            <span style={{ fontSize: 23, padding: 10 }}>{n1}</span>X
+            <span style={{ fontSize: 23, padding: 10 }}>{n2}</span>
+          </Paper>
+        </Grid>
+        <Grid container alignItems="center" justify="center">
+          <Input
+            id="respostaInput"
+            type="number"
+            inputRef={respostaRef}
+            style={{ width: "50px" }}
+            value={result}
+            onChange={respostaHandle}
+            autoFocus={true}
+          />
+        </Grid>
+        <Grid>
+          <Button color="primary" variant="contained" onClick={answer}>
+            Responder
+          </Button>
+        </Grid>
+      </Grid>
+    );
+  };
 
-    
-    answer() {
-        if (this.gameLogic.testResult(this.state.result)) {
-            this.setState({
-                score: this.gameLogic.score,
-                n1: this.gameLogic.n1,
-                n2:this.gameLogic.n2,
-                record: this.gameLogic.record
-            },()=> document.getElementById("respostaInput").focus());
-            
-        }
+  return (
+    <div>
+      {gameLogic.gameOver && (
+        <GameOver score={gameLogic.score} record={gameLogic.record} />
+      )}
+      {gameLogic.gameInProgress && !gameLogic.gameOver && renderGame()}
 
-        this.setState({
-            result:''
-        });
-
-    }
-
-    renderMainMenu() {
-        return (
-            <Grid container spacing={16} alignItems="center" justify="center">
-                <Button color="secondary" variant="contained" onClick={this.newGame.bind(this)}>Iniciar novo jogo</Button>
-            </Grid>
-        );
-    }
-
-    respostaHandle(e) {
-        this.setState({
-            result: parseInt(e.target.value,10)
-        });
-    }
-
-    renderGame() {
-        return (
-            <Grid container spacing={16} alignItems="center" justify="center">
-                <Grid item xs={6} sm={10}>
-                        <Paper>
-                            <span style={{fontSize:23, padding: 10}}>{this.state.n1}</span>
-                                
-                            X
-                
-                            <span style={{fontSize:23, padding: 10}}>{this.state.n2}</span>
-                        </Paper>
-                </Grid>
-                <Grid container alignItems="center" justify="center">
-                    <Input 
-                        id="respostaInput" 
-                        type="number" 
-                        style={{width:'50px'}}
-                        value={this.state.result} 
-                        onChange={this.respostaHandle.bind(this)}/>
-                </Grid>
-                <Grid>
-                    <Button color="primary" variant="contained" onClick={this.answer.bind(this)}>Responder</Button>
-                </Grid>
-            </Grid>
-        );
-    }
-
-    render() {
-        return (
-            <div >
-                
-                {this.gameLogic.gameOver && <GameOver score={this.gameLogic.score} record={this.gameLogic.record} />}
-                {this.gameLogic.gameInProgress && (!this.gameLogic.gameOver) && this.renderGame()}
-
-                {(!this.gameLogic.gameInProgress) && this.renderMainMenu()}
-                
-                
-
-            </div>
-
-        );
-    }
-}
-
-
+      {!gameLogic.gameInProgress && renderMainMenu()}
+    </div>
+  );
+};
 
 export default withStyles(styles)(Tabuada);
