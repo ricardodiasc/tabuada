@@ -13,5 +13,3 @@ export default Score = (props)=> (
         </span>
     </div>
 );
-
-PropTypes
