@@ -7,21 +7,22 @@ import Input from "@material-ui/core/Input";
 
 import GameLogic from "../logic/GameLogic";
 import GameOver from "./GameOver";
+import Keyboard from "./Keyboard";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   paper: {
     width: 100,
-    height: 140
+    height: 140,
   },
   control: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing.unit * 2,
   },
   chalenge: {
-    height: 120
-  }
+    height: 120,
+  },
 });
 
 const gameLogic = new GameLogic();
@@ -52,6 +53,12 @@ const Tabuada = () => {
     setResult("");
   };
 
+  const registerNumber = (e) => {
+    console.log(e.target.innerText);
+    let a = parseInt(result + e.target.innerText);
+    setResult(a);
+  };
+
   const renderMainMenu = () => {
     return (
       <Grid container spacing={16} alignItems="center" justify="center">
@@ -62,7 +69,7 @@ const Tabuada = () => {
     );
   };
 
-  const respostaHandle = e => {
+  const respostaHandle = (e) => {
     if (e.target.value !== "") {
       setResult(parseInt(e.target.value, 10));
     }
@@ -70,14 +77,21 @@ const Tabuada = () => {
 
   const renderGame = () => {
     return (
-      <Grid container spacing={16} alignItems="center" justify="center">
-        <Grid item xs={6} sm={10}>
+      <Grid container item xs={12} alignItems="center" justify="center">
+        <Grid item xs={10} sm={10}>
           <Paper>
             <span style={{ fontSize: 23, padding: 10 }}>{n1}</span>X
             <span style={{ fontSize: 23, padding: 10 }}>{n2}</span>
           </Paper>
         </Grid>
-        <Grid container alignItems="center" justify="center">
+        <Grid
+          xs={12}
+          sm={12}
+          container
+          item
+          alignItems="center"
+          justify="center"
+        >
           <Input
             id="respostaInput"
             type="number"
@@ -88,7 +102,9 @@ const Tabuada = () => {
             autoFocus={true}
           />
         </Grid>
-        <Grid>
+        <Keyboard onKeyPressed={registerNumber} />
+
+        <Grid container item xs={12} alignItems="center" justify="center">
           <Button color="primary" variant="contained" onClick={answer}>
             Responder
           </Button>
