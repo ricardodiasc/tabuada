@@ -45,6 +45,15 @@ class GameLogic {
         return Math.floor(Math.random() * Math.floor(max));
     }
 
+    setGameOver() {
+        this.gameInProgress = false;
+        this.gameOver = true;
+        if(this.score > this.record) {
+            this.record = this.score;
+        }
+        this.gameInProgress = false;
+    }
+
     /**
      * Test if the guess maches with result expected
      * 
@@ -56,12 +65,7 @@ class GameLogic {
             this.score = this.score + 1;
             this._newChallenge();
         } else {
-            this.gameInProgress = false;
-            this.gameOver = true;
-            if(this.score > this.record) {
-                this.record = this.score;
-            }
-            this.gameInProgress = false;
+            this.setGameOver();
         }
         return this.gameInProgress;
     }

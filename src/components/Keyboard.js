@@ -5,6 +5,7 @@ import DigitButton from "./DigitButton";
 const Keyboard = ({ onKeyPressed }) => {
   return (
     <Grid
+      
       item
       container
       xs={7}
