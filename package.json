@@ -6,9 +6,9 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "gh-pages": "^2.2.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-scripts": "^3.4.4",
     "typeface-roboto": "^0.0.54"
   },
   "scripts": {
