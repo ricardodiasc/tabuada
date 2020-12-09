@@ -26,6 +26,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     # - run: npm ci
     - run: npm install
-    - run: npm run deploy
+    - run: npm run build
     # after export secret - run: npm run deploy
     # - run: npm ci
