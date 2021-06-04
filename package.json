@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "homepage": ".",
+  "devDependencies": {
+    "webpack-dev-server": "3.11.1"
+  },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "gh-pages": "^2.2.0",
