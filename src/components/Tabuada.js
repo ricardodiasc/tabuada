@@ -103,14 +103,24 @@ const Tabuada = () => {
 
         <Grid
           xs={12}
-          sm={12}
+          sm={12}          
           container
           item
           alignItems="center"
           justify="center"
         />
+        <Grid
+          sm={8}
+          lg={12}          
+          container
+          item
+          alignItems="center"
+          justify="center"
+
+        >
+          <Keyboard onKeyPressed={registerNumber} />
+        </Grid>
         
-        <Keyboard onKeyPressed={registerNumber} />
         <Grid container item xs={12} alignItems="center" justify="center">
           
           <Button color="secondary" variant="contained" onClick={answer}>
