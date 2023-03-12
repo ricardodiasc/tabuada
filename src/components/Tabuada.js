@@ -52,6 +52,7 @@ const Tabuada = () => {
     gameLogic.startGame();
     setN1(gameLogic.n1);
     setN2(gameLogic.n2);
+    setResult("")
     setTimer(100);
   };
 
@@ -76,7 +77,7 @@ const Tabuada = () => {
   const renderMainMenu = () => {
     return (
       <Grid container alignItems="center" justify="center">
-        <Button color="secondary" variant="contained" onClick={newGame}>
+        <Button color="primary" variant="contained" onClick={newGame}>
           Iniciar novo jogo
         </Button>
       </Grid>
